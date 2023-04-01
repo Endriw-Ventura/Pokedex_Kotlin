@@ -1,0 +1,6 @@
+package com.example.pokedex.data.responses
+
+data class GenerationVi(
+    val omegaruby_alphasapphire: OmegarubyAlphasapphire,
+    val x_y: XY
+)
