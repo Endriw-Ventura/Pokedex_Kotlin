@@ -48,7 +48,9 @@ class PokeDetailActivity : AppCompatActivity(), CoroutineScope {
                     ) else it.toString()
                 }
 
-                tvPokemonType1.setTextColor(ContextCompat.getColorStateList(binding.root.context, colorTypeInt))
+                tvPokemonType1.backgroundTintList =
+                    ContextCompat.getColorStateList(binding.root.context, colorTypeInt)
+                //tvPokemonType1.setTextColor(ContextCompat.getColorStateList(binding.root.context, colorTypeInt))
                 flPokemonImage.backgroundTintList = ContextCompat.getColorStateList(binding.root.context, colorTypeInt)
 
                 if (colorTypeName != pokemon.data!!.types.last().type.name){
@@ -59,8 +61,11 @@ class PokeDetailActivity : AppCompatActivity(), CoroutineScope {
                             Locale.ROOT
                         ) else it.toString()
                     }
-
-                    tvPokemonType2.setTextColor(ContextCompat.getColorStateList(binding.root.context, colorType2Int))
+                    tvPokemonType2.backgroundTintList =
+                        ContextCompat.getColorStateList(binding.root.context, colorType2Int)
+                    //tvPokemonType2.setTextColor(ContextCompat.getColorStateList(binding.root.context, colorType2Int))
+                }else{
+                    tvPokemonType2.visibility = View.GONE
                 }
 
                 pbPokemonDetails.visibility = View.VISIBLE

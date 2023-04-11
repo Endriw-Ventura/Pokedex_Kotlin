@@ -77,17 +77,23 @@
 
             <TextView
                 android:id="@+id/tv_pokemon_type1"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
                 android:textSize="24sp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:background="@drawable/rectangular_borders"
                 android:textStyle="bold"
                 tools:text="ELECTRIC"/>
 
             <TextView
                 android:id="@+id/tv_pokemon_type2"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:background="@drawable/rectangular_borders"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 tools:text="FIRE"/>
@@ -113,7 +119,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="30dp">
+                android:layout_marginTop="50dp">
 
                 <TextView
                     android:layout_marginStart="20dp"
@@ -163,7 +169,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="50dp"
                 android:layout_height="wrap_content">
 
                 <TextView
