@@ -17,8 +17,9 @@ import java.util.*
 
 class PokemonAdapter(
     private var pokemons: Resource<MutableList<PokemonData>>
-): RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>() {
-    inner class PokemonViewHolder(val binding: PokemonItemBinding) : RecyclerView.ViewHolder(binding.root)
+) : RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>() {
+    inner class PokemonViewHolder(val binding: PokemonItemBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -28,39 +29,42 @@ class PokemonAdapter(
 
     override fun onBindViewHolder(holder: PokemonViewHolder, position: Int) {
         holder.binding.apply {
-            tvPokemonName.text = pokemons.data!![position].name.replaceFirstChar {
-                if (it.isLowerCase()) it.titlecase(
-                    Locale.ROOT
-                ) else it.toString()
-            }
-
-            val colorName = pokemons.data!![position].types.first().type.name
-            val colorTypeInt = PokemonTypes.getTypeColor(colorName)
-
+            val colorTypeInt = getColorInt(position)
+            tvPokemonName.text = turnInCamelCase(pokemons.data!![position].name)
             cvPokemonItem.backgroundTintList =
-                ContextCompat.getColorStateList(holder.binding.root.context, colorTypeInt)
+                ContextCompat.getColorStateList(root.context, colorTypeInt)
             pbPokemonItem.visibility = View.VISIBLE
-            ivPokemonImage.load(
-                consts.IMG_URL.replace(
-                    "idPokemon",
-                    pokemons.data!![position].id.toString()
-                )
-            ) {
-                //Listener para esconder o ProgressBar quando a imagem é carregada com sucesso
-                listener(
-                    onSuccess = { request, metadata ->
-                        pbPokemonItem.visibility = View.GONE
-                        ivPokemonImage.visibility = View.VISIBLE
-                    },
-                    onError = { request, throwable ->
-                        pbPokemonItem.visibility = View.GONE
-                        ivPokemonImage.visibility = View.VISIBLE
-                    }
-                )
-            }
+            loadPokemonImage(position)
         }
+        configureOnClickListener(holder, position)
+    }
 
-        holder.itemView.setOnClickListener{
+    private fun getColorInt(position: Int): Int {
+        val colorName = pokemons.data!![position].types.first().type.name
+        return PokemonTypes.getTypeColor(colorName)
+    }
+
+    private fun PokemonItemBinding.loadPokemonImage(position: Int) {
+        ivPokemonImage.load(getPokemonUrl(pokemons.data!![position].id.toString())) {
+            //Listener para esconder o ProgressBar quando a imagem é carregada com sucesso
+            listener(
+                onSuccess = { request, metadata ->
+                    pbPokemonItem.visibility = View.GONE
+                    ivPokemonImage.visibility = View.VISIBLE
+                },
+                onError = { request, throwable ->
+                    pbPokemonItem.visibility = View.GONE
+                    ivPokemonImage.visibility = View.VISIBLE
+                }
+            )
+        }
+    }
+
+    private fun configureOnClickListener(
+        holder: PokemonViewHolder,
+        position: Int
+    ) {
+        holder.itemView.setOnClickListener {
             val myIntent = Intent(holder.binding.root.context, PokeDetailActivity::class.java)
                 .apply {
                     putExtra("POKEMON_NAME", pokemons.data!![position].name)
@@ -68,6 +72,13 @@ class PokemonAdapter(
             holder.binding.root.context.startActivity(myIntent)
         }
     }
+
+    private fun turnInCamelCase(word: String) =
+        word.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(
+                Locale.ROOT
+            ) else it.toString()
+        }
 
     override fun getItemCount(): Int {
         return pokemons.data!!.size
