@@ -5,15 +5,12 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import coil.load
-import com.example.pokedex.consts.consts
 import com.example.pokedex.data.responses.PokemonData
 import com.example.pokedex.di.modules.AppModule
 import com.example.pokedex.databinding.ActivityPokeDetailBinding
 import com.example.pokedex.util.PokemonTypes
 import com.example.pokedex.util.PokemonUtil
-import com.example.pokedex.util.Resource
 import kotlinx.coroutines.*
-import java.util.*
 import kotlin.coroutines.CoroutineContext
 
 
@@ -27,22 +24,18 @@ class PokeDetailActivity : AppCompatActivity(), CoroutineScope {
         super.onCreate(savedInstanceState)
         binding = ActivityPokeDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val pokeApi = AppModule.providePokeApi()
-        val repository = AppModule.providePokemonRepository(pokeApi)
-        val pokemon_name = intent.getStringExtra("POKEMON_NAME")
+        val pokemon = intent.getSerializableExtra("POKEMON", PokemonData::class.java)
 
         launch(coroutineContext) {
-            val pokemon = repository.getPokemonInfo(pokemon_name!!)
             binding.apply {
-                setPokemonInfo(pokemon)
-                loadPokemonImage(pokemon.data!!.id)
+                setPokemonInfo(pokemon!!)
+                loadPokemonImage(pokemon.id)
             }
         }
     }
 
-    private fun ActivityPokeDetailBinding.setPokemonInfo(pokemon: Resource<PokemonData>) {
-        pokemon.data?.apply {
+    private fun ActivityPokeDetailBinding.setPokemonInfo(pokemon: PokemonData) {
+        pokemon.apply {
             val colorTypeName = types.first().type.name
             val colorTypeInt = PokemonTypes.getTypeColor(colorTypeName)
 
@@ -52,7 +45,7 @@ class PokeDetailActivity : AppCompatActivity(), CoroutineScope {
 
             tvPokemonType1.backgroundTintList =
                 ContextCompat.getColorStateList(root.context, colorTypeInt)
-            //tvPokemonType1.setTextColor(ContextCompat.getColorStateList(binding.root.context, colorTypeInt))
+
             flPokemonImage.backgroundTintList =
                 ContextCompat.getColorStateList(root.context, colorTypeInt)
 
@@ -91,16 +84,16 @@ class PokeDetailActivity : AppCompatActivity(), CoroutineScope {
 
     private fun ActivityPokeDetailBinding.setSecondPokemonType(
         colorTypeName: String,
-        pokemon: Resource<PokemonData>
+        pokemon:PokemonData
     ) {
-        if (colorTypeName != pokemon.data!!.types.last().type.name) {
-            val colorType2Name = pokemon.data.types.last().type.name
+        if (colorTypeName != pokemon.types.last().type.name) {
+            val colorType2Name = pokemon.types.last().type.name
             val colorType2Int = PokemonTypes.getTypeColor(colorType2Name)
 
             tvPokemonType2.text = PokemonUtil.turnInCamelCase(colorType2Name)
+
             tvPokemonType2.backgroundTintList =
                 ContextCompat.getColorStateList(binding.root.context, colorType2Int)
-            //tvPokemonType2.setTextColor(ContextCompat.getColorStateList(binding.root.context, colorType2Int))
         } else {
             tvPokemonType2.visibility = View.GONE
         }

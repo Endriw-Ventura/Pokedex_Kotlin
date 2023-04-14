@@ -1,6 +1,8 @@
 package com.example.pokedex.data.responses
 
-data class PokemonData(
+import java.io.Serializable
+
+data class PokemonData (
     val abilities: List<Ability>,
     val base_experience: Int,
     val forms: List<Form>,
@@ -19,4 +21,4 @@ data class PokemonData(
     val stats: List<Stat>,
     val types: List<Type>,
     val weight: Int
-)
+) : Serializable

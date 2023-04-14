@@ -13,12 +13,13 @@ import com.example.pokedex.databinding.PokemonItemBinding
 import com.example.pokedex.util.PokemonTypes
 import com.example.pokedex.util.PokemonUtil
 import com.example.pokedex.util.Resource
+import java.io.Serializable
 import java.util.*
 
 
 class PokemonAdapter(
     private var pokemons: Resource<MutableList<PokemonData>>
-) : RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>() {
+) : RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>(), Serializable {
     inner class PokemonViewHolder(val binding: PokemonItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
@@ -68,7 +69,7 @@ class PokemonAdapter(
         holder.itemView.setOnClickListener {
             val myIntent = Intent(holder.binding.root.context, PokeDetailActivity::class.java)
                 .apply {
-                    putExtra("POKEMON_NAME", pokemons.data!![position].name)
+                    putExtra("POKEMON", pokemons.data!![position])
                 }
             holder.binding.root.context.startActivity(myIntent)
         }

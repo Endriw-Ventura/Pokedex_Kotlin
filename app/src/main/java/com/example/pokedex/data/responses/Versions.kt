@@ -1,5 +1,7 @@
 package com.example.pokedex.data.responses
 
+import java.io.Serializable
+
 data class Versions(
     val generation_i: GenerationI,
     val generation_ii: GenerationIi,
@@ -9,4 +11,4 @@ data class Versions(
     val generation_vi: GenerationVi,
     val generation_vii: GenerationVii,
     val generation_viii: GenerationViii
-)
+) : Serializable

@@ -1,5 +1,7 @@
 package com.example.pokedex.data.responses
 
+import java.io.Serializable
+
 data class BlackWhite(
     val animated: Animated,
     val back_default: String,
@@ -10,4 +12,4 @@ data class BlackWhite(
     val front_female: Any,
     val front_shiny: String,
     val front_shiny_female: Any
-)
+) : Serializable

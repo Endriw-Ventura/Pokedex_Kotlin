@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         val recyclerView = binding.rvPokemonsList
 
         pokemonAdapterSetup(repository, recyclerView)
-        configureOnScrollListener(recyclerView, repository, adapter)
+
     }
 
     private fun pokemonAdapterSetup(
@@ -44,6 +44,9 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             val adapter = PokemonAdapter(pokemonsList)
             recyclerView.adapter = adapter
             binding.pbPokemonList.visibility = View.GONE // Esconde o ProgressBar
+
+            configureOnScrollListener(recyclerView, repository, adapter)
+
         }
     }
 

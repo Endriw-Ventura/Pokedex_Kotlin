@@ -1,5 +1,7 @@
 package com.example.pokedex.data.responses
 
+import java.io.Serializable
+
 data class Sprites(
     val back_default: String,
     val back_female: Any,
@@ -11,4 +13,4 @@ data class Sprites(
     val front_shiny_female: Any,
     val other: Other,
     val versions: Versions
-)
+) : Serializable
