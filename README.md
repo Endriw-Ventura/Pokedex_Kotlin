@@ -17,6 +17,8 @@ Technologies used:  <br>
 - Coroutines  <br>
 - Intent  <br>
 - CardView  <br>
+- Data pass with Intents <br>
+- Serializable Objects <br>
 
 
 Examples:
