@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pokedex.databinding.ActivityMainBinding
 import com.example.pokedex.di.modules.AppModule.providePokeApi
 import com.example.pokedex.di.modules.AppModule.providePokemonRepository
+import com.example.pokedex.repository.PokemonRepository
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
@@ -20,7 +21,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         get() = Dispatchers.Main + job
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -30,29 +30,42 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         val repository = providePokemonRepository(pokeApi)
         val recyclerView = binding.rvPokemonsList
 
-        binding.pbPokemonList.visibility = View.VISIBLE // Mostra o ProgressBar
+        pokemonAdapterSetup(repository, recyclerView)
+        configureOnScrollListener(recyclerView, repository, adapter)
+    }
 
-        launch(coroutineContext)  {
+    private fun pokemonAdapterSetup(
+        repository: PokemonRepository,
+        recyclerView: RecyclerView
+    ) {
+        binding.pbPokemonList.visibility = View.VISIBLE // Mostra o ProgressBar
+        launch(coroutineContext) {
             val pokemonsList = repository.getPokemonList(PAGE_SIZE, page * PAGE_SIZE)
-            adapter = PokemonAdapter(pokemonsList)
+            val adapter = PokemonAdapter(pokemonsList)
             recyclerView.adapter = adapter
             binding.pbPokemonList.visibility = View.GONE // Esconde o ProgressBar
         }
+    }
 
-        recyclerView.apply{
+    private fun configureOnScrollListener(
+        recyclerView: RecyclerView,
+        repository: PokemonRepository,
+        adapter: PokemonAdapter
+    ) {
+        recyclerView.apply {
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    if (!recyclerView.canScrollVertically(1) && dy > 0)
-                    {
+                    if (!recyclerView.canScrollVertically(1) && dy > 0) {
                         launch {
                             binding.pbPokemonList.visibility = View.VISIBLE // Mostra o ProgressBar
-                            page++
+
+                            page++ //aumenta o número de páginas
                             val pokemons = repository.getPokemonList(PAGE_SIZE, page * PAGE_SIZE)
                             adapter.updateData(pokemons.data!!)
+
                             binding.pbPokemonList.visibility = View.GONE // Esconde o ProgressBar
                         }
-                    }
-                    else {
+                    } else {
                         super.onScrolled(recyclerView, dx, dy)
                     }
                 }
